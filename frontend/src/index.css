@@ -1,0 +1,180 @@
+@import "tailwindcss";
+@config "../tailwind.config.ts";
+
+@variant dark (&:where(.dark, .dark *));
+
+@layer base {
+  :root {
+    --background: 0 0% 100%;
+    --foreground: 222.2 84% 4.9%;
+  }
+
+  .dark {
+    --background: 222 47% 4%;
+    --foreground: 210 40% 98%;
+  }
+
+  *,
+  *::before,
+  *::after {
+    box-sizing: border-box;
+  }
+
+  * {
+    @apply border-gray-200 dark:border-white/10;
+  }
+
+  html {
+    scroll-behavior: smooth;
+    max-width: 100%;
+    overflow-x: hidden;
+  }
+
+  body {
+    @apply bg-white text-gray-900 antialiased dark:bg-slate-950 dark:text-gray-100;
+    font-family: "Inter", system-ui, -apple-system, sans-serif;
+    max-width: 100%;
+    overflow-x: hidden;
+  }
+
+  #root {
+    min-height: 100%;
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+    overflow-x: hidden;
+  }
+
+  *:focus-visible {
+    @apply outline-none ring-2 ring-brand-500/50 ring-offset-2 dark:ring-offset-slate-950;
+  }
+}
+
+@layer utilities {
+  /* Glassmorphism card */
+  .glass-card {
+    @apply rounded-2xl border border-gray-200 bg-white shadow-sm;
+    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.05), 0 1px 2px 0 rgba(0, 0, 0, 0.03);
+  }
+  .glass-card:hover {
+    border-color: rgba(99, 102, 241, 0.35);
+  }
+  .dark .glass-card {
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+    transition: border-color 0.2s ease;
+  }
+  .dark .glass-card:hover {
+    border-color: rgba(99, 102, 241, 0.35);
+  }
+
+  /* Glass input */
+  .glass-input {
+    @apply rounded-xl border border-gray-300 bg-white text-sm shadow-sm transition-all;
+    @apply focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-500/20;
+  }
+  .dark .glass-input {
+    background: rgba(255, 255, 255, 0.05);
+    border-color: rgba(255, 255, 255, 0.1);
+    color: #e2e8f0;
+  }
+  .dark .glass-input:focus {
+    border-color: #818cf8;
+    box-shadow: 0 0 0 3px rgba(129, 140, 248, 0.15);
+  }
+
+  /* Text gradient */
+  .text-gradient {
+    @apply bg-gradient-to-r from-indigo-400 via-purple-400 to-cyan-400 bg-clip-text text-transparent;
+  }
+
+  /* Glow effect for CTAs */
+  .glow-brand {
+    box-shadow: 0 0 20px rgba(99, 102, 241, 0.3), 0 0 60px rgba(99, 102, 241, 0.1);
+  }
+  .glow-brand:hover {
+    box-shadow: 0 0 25px rgba(99, 102, 241, 0.4), 0 0 80px rgba(99, 102, 241, 0.15);
+  }
+
+  /* Custom scrollbar */
+  .scrollbar-thin { scrollbar-width: thin; }
+  .scrollbar-thin::-webkit-scrollbar { width: 6px; }
+  .scrollbar-thin::-webkit-scrollbar-track { background: transparent; }
+  .scrollbar-thin::-webkit-scrollbar-thumb { background-color: #4b5563; border-radius: 3px; }
+
+  /* Resume visualization preview — thin, modern, dashboard-aligned */
+  .viz-preview-scroll {
+    scrollbar-width: thin;
+    scrollbar-color: rgba(100, 116, 139, 0.75) rgba(15, 23, 42, 0.2);
+  }
+  .viz-preview-scroll::-webkit-scrollbar {
+    width: 7px;
+  }
+  .viz-preview-scroll::-webkit-scrollbar-track {
+    margin: 4px 0;
+    background: rgba(15, 23, 42, 0.12);
+    border-radius: 8px;
+  }
+  .viz-preview-scroll::-webkit-scrollbar-thumb {
+    background: linear-gradient(180deg, rgba(99, 102, 241, 0.45), rgba(139, 92, 246, 0.45));
+    border-radius: 8px;
+    border: 2px solid transparent;
+    background-clip: padding-box;
+  }
+  .viz-preview-scroll::-webkit-scrollbar-thumb:hover {
+    background: linear-gradient(180deg, rgba(99, 102, 241, 0.75), rgba(139, 92, 246, 0.75));
+    background-clip: padding-box;
+  }
+  .dark .viz-preview-scroll {
+    scrollbar-color: rgba(129, 140, 248, 0.45) rgba(15, 23, 42, 0.5);
+  }
+  .dark .viz-preview-scroll::-webkit-scrollbar-track {
+    background: rgba(15, 23, 42, 0.55);
+  }
+  .dark .viz-preview-scroll::-webkit-scrollbar-thumb {
+    background: linear-gradient(180deg, rgba(99, 102, 241, 0.35), rgba(139, 92, 246, 0.35));
+    background-clip: padding-box;
+  }
+  .dark .viz-preview-scroll::-webkit-scrollbar-thumb:hover {
+    background: linear-gradient(180deg, rgba(129, 140, 248, 0.55), rgba(167, 139, 250, 0.5));
+    background-clip: padding-box;
+  }
+
+  /* Smooth, reliable mobile scrolling for the dashboard's main content area.
+     Without these, iOS Safari/Chrome can "stick" momentum scroll inside nested
+     overflow containers and overscroll bounce can cancel touch gestures. */
+  .dashboard-scroll {
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior: contain;
+    touch-action: pan-y;
+  }
+
+  /* h-screen uses 100vh which on mobile browsers includes the URL bar height,
+     making the layout taller than the actual visible viewport and breaking
+     nested scroll containers. dvh = dynamic viewport height. */
+  .dvh-screen {
+    height: 100dvh;
+  }
+
+  /* Mobile-first heading alignment: centered on small, left on md+ */
+  .heading-responsive {
+    @apply text-center md:text-left;
+  }
+
+  /* Float animation */
+  .animate-float {
+    animation: float 3s ease-in-out infinite;
+  }
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+}
+
+::selection {
+  @apply bg-brand-500/30 text-white;
+}

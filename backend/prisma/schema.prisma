@@ -1,0 +1,71 @@
+generator client {
+  provider      = "prisma-client-js"
+  // Vercel serverless runs on Linux; without this, the query engine for deployment can be missing at runtime.
+  // See https://www.prisma.io/docs/orm/prisma-client/deployment/serverless/deploy-to-vercel
+  binaryTargets = ["native", "rhel-openssl-3.0.x"]
+}
+
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id               String   @id @default(auto()) @map("_id") @db.ObjectId
+  name             String
+  email            String   @unique
+  password         String
+  role             String   @default("fresher")
+  isPro            Boolean  @default(false)
+  aiCredits        Int      @default(1)
+  stripeCustomerId String?
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+  resumes          Resume[]
+
+  @@map("users")
+}
+
+model Resume {
+  id        String    @id @default(auto()) @map("_id") @db.ObjectId
+  userId    String    @db.ObjectId
+  fileUrl   String
+  fileName  String
+  atsScore  Int?
+  /// Raw text from the last successful analysis (used when the file is gone on /tmp, e.g. Vercel)
+  storedResumeText String?
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  analysis  Analysis?
+
+  @@map("resumes")
+}
+
+model Analysis {
+  id              String   @id @default(auto()) @map("_id") @db.ObjectId
+  resumeId        String   @unique @db.ObjectId
+  skillsScore     Int      @default(0)
+  experienceScore Int      @default(0)
+  educationScore  Int      @default(0)
+  projectsScore   Int      @default(0)
+  jobMatchScore   Int      @default(0)
+  suggestions     String[]
+  keywords        String[]
+  missingKeywords String[]
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  resume          Resume   @relation(fields: [resumeId], references: [id], onDelete: Cascade)
+
+  @@map("analyses")
+}
+
+model Feedback {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  userId    String   @db.ObjectId
+  rating    Int
+  comment   String   @default("")
+  createdAt DateTime @default(now())
+
+  @@map("feedbacks")
+}

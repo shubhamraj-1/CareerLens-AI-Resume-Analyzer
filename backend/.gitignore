@@ -1,0 +1,13 @@
+node_modules
+dist
+.env
+uploads
+*.log
+<<<<<<< HEAD
+assets/
+*.jpg
+*.png
+.vercel
+.env*.local
+=======
+>>>>>>> 81ef5bf1eb288139a17513bbf167f4ff33326c7c

@@ -1,0 +1,13 @@
+{
+  "version": 2,
+  "installCommand": "npm install && cd backend && npm install",
+  "buildCommand": "cd backend && npm run build",
+  "functions": {
+    "backend/dist/server.js": {
+      "maxDuration": 60
+    },
+    "backend/src/server.ts": {
+      "maxDuration": 60
+    }
+  }
+}
