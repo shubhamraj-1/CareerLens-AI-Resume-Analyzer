@@ -434,7 +434,7 @@ export class AnalysisController {
 
       // 1. Scrape the job page (fetch + cheerio; no axios — avoids missing-module issues on Vercel)
       const fetched = await fetchJobPageHtml(jobUrl);
-      if (!fetched.ok) {
+    if (fetched.ok === false) {
         sendError(res, fetched.message, 400);
         return;
       }
