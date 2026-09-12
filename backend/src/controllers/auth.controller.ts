@@ -4,12 +4,12 @@ import { authService } from "../services/auth.service";
 import { registerSchema, loginSchema, googleAuthBodySchema } from "../validators/auth";
 import { sendSuccess, sendError } from "../helpers/response";
 import { env } from "../config/env";
-import type { AuthenticatedRequest } from "../types";
+import type { AuthenticatedRequest, RegisterBody, LoginBody } from "../types";
 
 export class AuthController {
   async register(req: Request, res: Response, next: NextFunction) {
     try {
-      const data = registerSchema.parse(req.body);
+const data = registerSchema.parse(req.body) as RegisterBody;
       const result = await authService.register(data);
       sendSuccess(res, result, 201);
     } catch (error) {
@@ -23,7 +23,7 @@ export class AuthController {
 
   async login(req: Request, res: Response, next: NextFunction) {
     try {
-      const data = loginSchema.parse(req.body);
+const data = loginSchema.parse(req.body) as LoginBody;
       const result = await authService.login(data);
       sendSuccess(res, result);
     } catch (error) {
